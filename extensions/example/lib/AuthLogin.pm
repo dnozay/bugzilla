@@ -18,7 +18,7 @@
 #
 # Contributor(s): Max Kanat-Alexander <mkanat@bugzilla.org>
 
-package extensions::example::lib::AuthLogin;
+package extensions::Example::lib::AuthLogin;
 use strict;
 use base qw(Bugzilla::Auth::Login);
 use constant user_can_create_account => 0;

@@ -10,22 +10,24 @@
 # implied. See the License for the specific language governing
 # rights and limitations under the License.
 #
-# The Original Code is the Bugzilla Example Plugin.
+# The Original Code is the Bugzilla Bug Tracking System.
 #
-# The Initial Developer of the Original Code is Canonical Ltd.
-# Portions created by Canonical are Copyright (C) 2008 Canonical Ltd.
-# All Rights Reserved.
+# The Initial Developer of the Original Code is Everything Solved, Inc.
+# Portions created by the Initial Developer are Copyright (C) 2009
+# the Initial Developer. All Rights Reserved.
 #
-# Contributor(s): Max Kanat-Alexander <mkanat@bugzilla.org>
+# Contributor(s): 
+#   Max Kanat-Alexander <mkanat@bugzilla.org>
 
-package extensions::Example::lib::AuthVerify;
+package Bugzilla::Extension::BmpConvert;
 use strict;
-use base qw(Bugzilla::Auth::Verify);
-use Bugzilla::Constants;
+use constant NAME => 'BmpConvert';
+use constant REQUIRED_MODULES => [
+  {
+      package => 'PerlMagick',
+      module  => 'Image::Magick',
+      version => 0,
+  },
+];
 
-# A verifier that always fails.
-sub check_credentials {
-    return { failure => AUTH_NO_SUCH_USER };
-}
-
-1;
+__PACKAGE__->NAME;

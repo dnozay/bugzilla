@@ -19,7 +19,7 @@
 # Contributor(s): Max Kanat-Alexander <mkanat@bugzilla.org>
 #                 Bradley Baetz <bbaetz@acm.org>
 
-package extensions::example::lib::ConfigExample;
+package extensions::Example::lib::ConfigExample;
 use strict;
 use warnings;
 
