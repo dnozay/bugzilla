@@ -1,0 +1,3 @@
+[submodule "extensions/MultipleEditNoEmail"]
+	path = extensions/MultipleEditNoEmail
+	url = https://github.com/dnozay/Bugzilla-Extension-MultipleEditNoEmail
