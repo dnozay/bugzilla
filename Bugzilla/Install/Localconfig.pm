@@ -37,6 +37,10 @@ our @EXPORT_OK = qw(
 
 use constant LOCALCONFIG_VARS => (
     {
+        name    => 'extension_paths',
+        default => undef,
+    },
+    {
         name    => 'create_htaccess',
         default => 1,
     },

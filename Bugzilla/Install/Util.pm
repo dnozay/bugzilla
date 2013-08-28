@@ -29,6 +29,7 @@ use parent qw(Exporter);
 our @EXPORT_OK = qw(
     bin_loc
     get_version_and_os
+    extension_paths
     extension_code_files
     extension_package_directory
     extension_requirement_packages
@@ -83,16 +84,15 @@ sub get_version_and_os {
              os_ver   => $os_details[3] };
 }
 
-sub _extension_paths {
-    my $dir = bz_locations()->{'extensionsdir'};
-    my @extension_items = glob("$dir/*");
+sub _filter_extension_paths {
+    my ($extension_items) = @_;
     my @paths;
-    foreach my $item (@extension_items) {
+    foreach my $item (@$extension_items) {
         my $basename = basename($item);
         # Skip CVS directories and any hidden files/dirs.
         next if ($basename eq 'CVS' or $basename =~ /^\./);
         if (-d $item) {
-            if (!-e "$item/disabled") {
+            if (! -e "$item/disabled") {
                 push(@paths, $item);
             }
         }
@@ -100,13 +100,42 @@ sub _extension_paths {
             push(@paths, $item);
         }
     }
-    return @paths;
+    return \@paths;
+}
+
+sub _default_extension_paths {
+    my $dir = bz_locations()->{'extensionsdir'};
+    my @extension_items = glob("$dir/*");
+    return _filter_extension_paths(\@extension_items);
+}
+
+sub extension_paths {
+    my $dir = bz_locations()->{'extensionsdir'};
+    my @paths;
+    my $extension_items;
+    my $extension_paths;
+    if ($INC{'Bugzilla.pm'}) {
+        # don't use require, esp. if Bugzilla is loaded.
+        my $lc_hash = Bugzilla->localconfig;
+        $extension_paths = $lc_hash->{'extension_paths'};
+    }
+    if (!defined $extension_paths) {
+        # note: this will filter out disabled extensions.
+        $extension_items = _default_extension_paths();
+    }
+    else {
+        # Bug 908087 - allow ordering of extensions.
+        # note: the array is defined, trust what is
+        # configured, do not check for disabled.
+        $extension_items = $extension_paths;
+    }
+    return $extension_items;
 }
 
 sub extension_code_files {
     my ($requirements_only) = @_;
     my @files;
-    foreach my $path (_extension_paths()) {
+    foreach my $path (@{extension_paths()}) {
         my @load_files;
         if (-d $path) {
             my $extension_file = "$path/Extension.pm";
@@ -440,7 +469,7 @@ sub _template_base_directories {
 
     # Extensions may also contain *only* templates, in which case they
     # won't show up in extension_requirement_packages.
-    foreach my $path (_extension_paths()) {
+    foreach my $path (@{extension_paths()}) {
         next if !-d $path;
         if (!-e "$path/Extension.pm" and !-e "$path/Config.pm"
             and -d "$path/template") 
@@ -710,6 +739,12 @@ binary, if the binary is in the C<PATH>.
 
 Returns a hash containing information about what version of Bugzilla we're
 running, what perl version we're using, and what OS we're running on.
+
+=item C<extension_paths>
+
+Returns an array ref containing the list of extension directories we've found
+when using C<glob("$extension_dir/*"")> or overridden by the localconfig
+C<extension_paths> setting when it is defined.
 
 =item C<get_console_locale>
 
