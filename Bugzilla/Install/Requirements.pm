@@ -275,6 +275,24 @@ sub OPTIONAL_MODULES {
     # XXX - Once we require XMLRPC::Lite 0.717 or higher, we can
     # remove SOAP::Lite from the list.
     {
+        package => 'DBD-Oracle',
+        module  => 'DBD::Oracle',
+        version => 0,
+        feature => ['dbd_oracle'],
+    },
+    {
+        package => 'DBD-Pg',
+        module  => 'DBD::Pg',
+        version => 0,
+        feature => ['dbd_pg'],
+    },
+    {
+        package => 'XMLRPC',
+        module  => 'XMLRPC::Transport::HTTP',
+        version => 0,
+        feature => ['xmlrpc'],
+    },
+    {
         package => 'SOAP-Lite',
         module  => 'SOAP::Lite',
         # Fixes various bugs, including 542931 and 552353 + stops
