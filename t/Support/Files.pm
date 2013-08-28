@@ -13,6 +13,7 @@ use strict;
 use warnings;
 
 use File::Find;
+use Bugzilla::Install::Util qw(extension_paths);
 
 our @additional_files = ();
 
@@ -20,11 +21,10 @@ our @files = glob('*');
 find(sub { push(@files, $File::Find::name) if $_ =~ /\.pm$/;}, 'Bugzilla');
 push(@files, 'extensions/create.pl');
 
-our @extensions =
-    grep { $_ ne 'extensions/create.pl' && ! -e "$_/disabled" }
-    glob('extensions/*');
-
 foreach my $extension (@extensions) {
+our @extensions = @{extension_paths()};
+foreach my $extension (@extensions) {
+    $extension =~ s{^./}{};
     find(sub { push(@files, $File::Find::name) if $_ =~ /\.pm$/;}, $extension);
 }
 

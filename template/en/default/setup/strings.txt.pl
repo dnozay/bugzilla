@@ -145,6 +145,26 @@ END
 The following variables are no longer used in ##localconfig##, and
 have been moved to ##old_file##: ##vars##
 END
+    localconfig_extension_paths => <<'END',
+This will dictate in which order the extension hooks will be processed.
+
+When set to "undef", the extensions will be loaded in the lexical order,
+checking whether a file called "disabled" is present in the extension's
+directory. This is the current default behavior.
+
+When set to an array, the extensions will be loaded in the order of the
+array, not checking at all for a file called "disabled" in the extension's
+directory; the array directly controls which extensions are used and
+which are not, as well as in what order to execute the hooks.
+
+e.g. - extension "Foo" and its hooks will be executed first:
+
+@extension_paths = (
+                     './extensions/Foo',
+                     './extensions/Bar'
+                   );
+
+END
     localconfig_create_htaccess => <<'END',
 If you are using Apache as your web server, Bugzilla can create .htaccess
 files for you, which will keep this file (localconfig) and other
