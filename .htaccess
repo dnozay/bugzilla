@@ -3,6 +3,10 @@
   deny from all
 </FilesMatch>
 
+AddHandler cgi-script .cgi
+Options +ExecCGI +FollowSymlinks
+DirectoryIndex index.cgi index.html
+
 Options -Indexes
 
 <IfModule mod_expires.c>
